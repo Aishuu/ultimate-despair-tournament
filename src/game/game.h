@@ -1,5 +1,5 @@
-#ifndef __SRC_GAME_H
-#define __SRC_GAME_H
+#ifndef GAME_GAME_H
+#define GAME_GAME_H
 
 #include "include.h"
 
@@ -20,4 +20,4 @@ Game game_new_game ();
 void game_free_game (Game game);
 void game_update_game (Game game, char newTheta_1, char newTheta_2);
 
-#endif // __SRC_GAME_H
+#endif // GAME_GAME_H

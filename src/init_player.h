@@ -1,12 +1,11 @@
-#ifndef __SRC_INIT_PLAYER_H
-#define __SRC_INIT_PLAYER_H
+#ifndef INIT_PLAYER_H
+#define INIT_PLAYER_H
 
-#include "game.h"
+#include "game/game.h"
 
-void init_player_1 (const Game game);
-void init_player_2 (const Game game);
+typedef char (*getThetaFunction)(const Game);
 
-char getTheta_1 (const Game game);
-char getTheta_2 (const Game game);
+getThetaFunction initTheDemos (const Game game);
+getThetaFunction initAishuu (const Game game);
 
-#endif // __SRC_INIT_PLAYER_H
+#endif // INIT_PLAYER_H

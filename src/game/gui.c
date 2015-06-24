@@ -1,7 +1,8 @@
 #include <SDL2/SDL.h>
 
 #include "include.h"
-#include "gui.h"
+
+#include "game/gui.h"
 
 #define BPP     4
 #define DEPTH   32
