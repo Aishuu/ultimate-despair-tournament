@@ -13,10 +13,16 @@ struct MyColor {
     Uint8 b;
 };
 
-struct MyColor colors [3] = {
+struct MyColor colors [9] = {
+    {.r=255, .g=255, .b=255},
+    {.r=255, .g=255, .b=255},
     {.r=255, .g=255, .b=255},
     {.r=255, .g=0,   .b=0},
-    {.r=0,   .g=0,   .b=255}
+    {.r=155, .g=0,  .b=0},
+    {.r=55, .g=0, .b=0},
+    {.r=0,   .g=0,   .b=255},
+    {.r=0,  .g=0,  .b=155},
+    {.r=0, .g=0, .b=55}
 };
 
 SDL_Surface* screen;
@@ -25,11 +31,15 @@ SDL_Window* window;
 void setpixel(int x, int y, Uint8 r, Uint8 g, Uint8 b) {
     Uint32 *pixmem32;
     Uint32 colour;  
- 
-    colour = SDL_MapRGB( screen->format, r, g, b );
+    Uint8 o_r, o_g, o_b;
   
     pixmem32 = (Uint32*) screen->pixels  + y + x;
-    *pixmem32 = colour;
+    SDL_GetRGB(*pixmem32, screen->format, &o_r, &o_g, &o_b);
+
+    if (o_r+o_g+o_b == 0 || r+g+b > o_r+o_g+o_b) {
+        colour = SDL_MapRGB( screen->format, r, g, b );
+        *pixmem32 = colour;
+    }
 }
 
 void draw (Game game) { 
@@ -42,9 +52,29 @@ void draw (Game game) {
 
     for(y = 0; y < screen->h; y++ ) {
         ytimesw = y*screen->pitch/BPP;
-        for( x = 0; x < screen->w; x++ ) {
-            setpixel(x, ytimesw, colors[game->cases[x][y]].r, colors[game->cases[x][y]].g, colors[game->cases[x][y]].b);
-        }
+        for( x = 0; x < screen->w; x++ )
+           if (game->cases[x][y] != 0)
+            {
+                setpixel(x, ytimesw, colors[3*game->cases[x][y]].r, colors[3*game->cases[x][y]].g, colors[3*game->cases[x][y]].b);
+                if (x > 0) {
+                    setpixel(x-1, ytimesw, colors[3*game->cases[x][y]+1].r, colors[3*game->cases[x][y]+1].g, colors[3*game->cases[x][y]+1].b);
+                    if (y > 0)
+                        setpixel(x-1, ytimesw-screen->pitch/BPP, colors[3*game->cases[x][y]+2].r, colors[3*game->cases[x][y]+2].g, colors[3*game->cases[x][y]+2].b);
+                    if (y < screen->h-1)
+                        setpixel(x-1, ytimesw+screen->pitch/BPP, colors[3*game->cases[x][y]+2].r, colors[3*game->cases[x][y]+2].g, colors[3*game->cases[x][y]+2].b);
+                }
+                if (x < screen->w-1) {
+                    setpixel(x+1, ytimesw, colors[3*game->cases[x][y]+1].r, colors[3*game->cases[x][y]+1].g, colors[3*game->cases[x][y]+1].b);
+                    if (y > 0)
+                        setpixel(x+1, ytimesw-screen->pitch/BPP, colors[3*game->cases[x][y]+2].r, colors[3*game->cases[x][y]+2].g, colors[3*game->cases[x][y]+2].b);
+                    if (y < screen->h-1)
+                        setpixel(x+1, ytimesw+screen->pitch/BPP, colors[3*game->cases[x][y]+2].r, colors[3*game->cases[x][y]+2].g, colors[3*game->cases[x][y]+2].b);
+                }
+                if (y > 0)
+                    setpixel(x, ytimesw-screen->pitch/BPP, colors[3*game->cases[x][y]+1].r, colors[3*game->cases[x][y]+1].g, colors[3*game->cases[x][y]+1].b);
+                if (y < screen->h-1)
+                    setpixel(x, ytimesw+screen->pitch/BPP, colors[3*game->cases[x][y]+1].r, colors[3*game->cases[x][y]+1].g, colors[3*game->cases[x][y]+1].b);
+            }
     }
 
     if(SDL_MUSTLOCK(screen)) SDL_UnlockSurface(screen);
