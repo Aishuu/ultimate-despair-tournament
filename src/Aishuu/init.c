@@ -104,7 +104,7 @@ uint16_t distDirection (const Game game, uint16_t theta, int max) {
     return (int) N2 (currentX - (int) game->player2.x, currentY - (int) game->player2.y);
 }
 
-char getThetaAishuu (const Game game) {
+char getThetaAishuu (const Game game, void * arg) {
     int inputs [INPUTS];
     char outputs [OUTPUTS];
 
@@ -126,7 +126,7 @@ char getThetaAishuu (const Game game) {
     return r;
 }
 
-getThetaFunction initAishuu (const Game game) {
+getThetaFunction initAishuu (const Game game, void * arg) {
     ann = ANN_new_ANN ();
 
     return getThetaAishuu;

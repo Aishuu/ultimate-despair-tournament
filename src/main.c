@@ -4,7 +4,7 @@
 
 #include "include.h"
 
-int fightPlayer (getThetaFunction (*init_1)(const Game), getThetaFunction (*init_2)(const Game), char isGUI) {
+int fightPlayer (getThetaFunction (*init_1)(const Game, void *), getThetaFunction (*init_2)(const Game, void *), void * arg1, void * arg2, char isGUI) {
     srand(clock());
 
     Game game = game_new_game ();
@@ -14,15 +14,15 @@ int fightPlayer (getThetaFunction (*init_1)(const Game), getThetaFunction (*init
     if (isGUI)
         initGUI ();
 
-    getThetaFunction getTheta1 = init_1 (game);
-    getThetaFunction getTheta2 = init_2 (game);
+    getThetaFunction getTheta1 = init_1 (game, arg1);
+    getThetaFunction getTheta2 = init_2 (game, arg2);
 
     while (!game->won) {
         if (isGUI && getEvent () == -1)
             break;
-        newTheta_1 = (*getTheta1) (game);
+        newTheta_1 = (*getTheta1) (game, arg1);
         newTheta_1 = (newTheta_1 > 0 ? 1 : newTheta_1 == 0 ? 0 : -1);
-        newTheta_2 = (*getTheta2) (game);
+        newTheta_2 = (*getTheta2) (game, arg2);
         newTheta_2 = (newTheta_2 > 0 ? 1 : newTheta_2 == 0 ? 0 : -1);
 
         game_update_game (game, newTheta_1, newTheta_2);
@@ -51,7 +51,7 @@ int fightPlayer (getThetaFunction (*init_1)(const Game), getThetaFunction (*init
 int realTournament () {
     const char * players[2] = {PLAYER1, PLAYER2};
 
-    int r = fightPlayer (initTheDemos, initAishuu, 1);
+    int r = fightPlayer (initTheDemos, initAishuu, NULL, NULL, 1);
 
     if (r == 0)
         printf ("Match interrupted.\n");
