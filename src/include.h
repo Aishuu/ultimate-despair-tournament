@@ -12,7 +12,7 @@
 #define IMAGES_PER_SEC  60
 #define MIN_INIT_DIST   100
 #define SPEED           2
-#define ANGULAR_SPEED   5
+#define ANGULAR_SPEED   25
 
 #define MIN(X, Y) (((X) < (Y)) ? (X) : (Y))
 #define DIST_M(X, Y, Z) (MIN(abs((int)X - (int)Y), Z-abs(((int)X - (int)Y))))

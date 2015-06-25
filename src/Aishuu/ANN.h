@@ -19,5 +19,7 @@ typedef struct {
 ANN ANN_new_ANN ();
 void ANN_free_ANN (ANN ann);
 void ANN_compute (ANN ann, int inputs[INPUTS], char outputs[OUTPUTS]);
+ANN ANN_mate_ANN (ANN ann1, ANN ann2);
+void ANN_mutate_ANN (ANN ann, int nbMutation);
 
 #endif // ANN_H

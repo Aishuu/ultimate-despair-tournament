@@ -5,8 +5,6 @@
 
 #define N2(X,Y)    (sqrt((X)*(X)+(Y)*(Y)))
 
-ANN ann;
-
 uint16_t distDirection (const Game game, uint16_t theta, int max) {
     int currentX = (int) game->player2.x;
     int currentY = (int) game->player2.y;
@@ -100,19 +98,19 @@ uint16_t distDirection (const Game game, uint16_t theta, int max) {
             }
         }
     } else
-        return 0;
-    return (int) N2 (currentX - (int) game->player2.x, currentY - (int) game->player2.y);
+        return max;
+    return max - ((int) N2 (currentX - (int) game->player2.x, currentY - (int) game->player2.y));
 }
 
 char getThetaAishuu (const Game game, void * arg) {
+    ANN ann = (ANN) arg;
+
     int inputs [INPUTS];
     char outputs [OUTPUTS];
 
     int i;
     for (i=0; i<INPUTS; i++)
         inputs [i] = distDirection (game, game->player2.theta + 360*i/INPUTS, MAX_EDGE_VALUE);
-
-    printf ("%03d %03d %03d %03d %03d %03d %03d %03d %03d %03d\n", inputs[0], inputs[1], inputs[2], inputs[3], inputs[4], inputs[5], inputs[6], inputs[7], inputs[8], inputs[9]);
 
     ANN_compute (ann, inputs, outputs);
 
@@ -127,7 +125,5 @@ char getThetaAishuu (const Game game, void * arg) {
 }
 
 getThetaFunction initAishuu (const Game game, void * arg) {
-    ann = ANN_new_ANN ();
-
     return getThetaAishuu;
 }

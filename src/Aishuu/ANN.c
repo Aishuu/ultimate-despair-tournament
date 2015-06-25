@@ -75,3 +75,40 @@ void ANN_compute (ANN ann, int inputs[INPUTS], char outputs[OUTPUTS]) {
         edge_index += NEURONS_PER_LAYER;
     }
 }
+
+ANN ANN_mate_ANN (ANN ann1, ANN ann2) {
+    ANN r = ANN_new_ANN ();
+    // TODO select edges and threshold in a linked way
+    int i;
+    for (i=0; i<NB_EDGES; i++) {
+        int random = rand () % 2;
+        if (random)
+            r->edges[i] = ann2->edges[i];
+        else
+            r->edges[i] = ann1->edges[i];
+    }
+
+    for (i=0; i<NEURONS_PER_LAYER*LAYER+OUTPUTS; i++) {
+        int random = rand () % 2;
+        if (random)
+            r->threshold[i] = ann2->threshold[i];
+        else
+            r->threshold[i] = ann1->threshold[i];
+    }
+
+    return r;
+}
+
+void ANN_mutate_ANN (ANN ann, int nbMutation) {
+    int i;
+    for (i=0; i<nbMutation; i++) {
+        int r = rand () % (NB_EDGES + NEURONS_PER_LAYER*LAYER+OUTPUTS);
+        if (r > NB_EDGES) {
+            int val = (rand () % (2*MAX_THRESHOLD_VALUE+1)) - MAX_THRESHOLD_VALUE;
+            ann->threshold[r-NB_EDGES] = val;
+        } else {
+            int val = (rand () % (2*MAX_EDGE_VALUE+1)) - MAX_EDGE_VALUE;
+            ann->edges[r] = val;
+        }
+    }
+}
